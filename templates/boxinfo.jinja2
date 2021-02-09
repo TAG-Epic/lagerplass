@@ -14,8 +14,9 @@
 
         function addItem() {
             let selected_item = $("option:selected").val();
-            fetch(`/boxes/{{ box_id }}/items/${selected_item}`, {method: "POST"});
-            location.reload();
+            fetch(`/boxes/{{ box_id }}/items/${selected_item}`, {method: "POST"}).then((h) => {
+               location.reload();
+            });
         }
         function deleteBox() {
             fetch("/boxes/{{ box_id }}", {method: "DELETE"}).then((h) => {

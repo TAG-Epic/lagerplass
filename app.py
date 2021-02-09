@@ -91,7 +91,7 @@ def get_box_items(box_id):
             all_items_sorted[item["category"]] = []
         all_items_sorted[item["category"]].append(item)
 
-    return render_template("itemlist.jinja2", box_id=box_id, location=location, items=items, all_items=all_items_sorted)
+    return render_template("boxinfo.jinja2", box_id=box_id, location=location, items=items, all_items=all_items_sorted)
 
 
 @app.route("/boxes/<string:box_id>/items/<string:item_id>", methods=["POST"])
