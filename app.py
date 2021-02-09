@@ -14,7 +14,7 @@ items_table = db["items"]
 boxes_table = db["boxes"]
 
 
-@app.route('/boxes/create')
+@app.route('/boxes', methods=["POST"])
 def create_box():
     box_id = str(uuid4())
     boxes_table.insert_one({
@@ -23,7 +23,7 @@ def create_box():
         "items": []
     })
 
-    return redirect("/boxes/%s/qr" % box_id)
+    return redirect("/boxes/%s" % box_id)
 
 
 @app.route("/items", methods=["POST"])
@@ -133,6 +133,12 @@ def render_item(item_id):
 def delete_box(box_id):
     boxes_table.delete_one({"_id": box_id})
     return "Ok."
+
+
+@app.route("/boxes")
+def render_boxes_gui():
+    boxes = boxes_table.find()
+    return render_template("createboxes.jinja2", boxes=boxes)
 
 
 if __name__ == '__main__':

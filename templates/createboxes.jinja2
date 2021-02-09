@@ -1,0 +1,43 @@
+{% extends "base.jinja2" %}
+{% block custom_code %}
+    <script>
+        function createBox() {
+            let url = new URL(window.location.origin + "/boxes")
+            url.search = new URLSearchParams({
+                location: $(".box-location").val().toLocaleLowerCase()
+            }).toString();
+
+            fetch(url.toString(), {method: "POST"}).then((res) => {
+                location.href = res.url;
+            });
+        }
+    </script>
+{% endblock %}
+{% block custom_styles %}
+    <style>
+        .small-spacers {
+            margin-bottom: 3px;
+        }
+    </style>
+{% endblock %}
+{% block content %}
+    <div class="d-flex flex-column justify-content-middle">
+        <input class="box-location p-2 small-spacers" placeholder="Location...">
+        <button class="p-2 small-spacers" onclick="createBox()">Create box!</button>
+    </div>
+    <hr>
+    <div class="item-list">
+        <div class="d-flex flex-column">
+            {% for box in boxes %}
+                <div class="item-{{ box["_id"] }}" onclick="window.location.href = '/boxes/{{ box["_id"] }}'">
+                    <div class="p-2 d-flex">
+                        <div class="d-flex justify-content-start">
+                            <span><b>at the {{ box["location"] }}/</b>{{ box["_id"][:4] }}</span>
+                        </div>
+                    </div>
+                    <hr>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+{% endblock %}
