@@ -1,0 +1,16 @@
+version: "3"
+services:
+  website:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - 6060:5000
+    links:
+      - mongo
+  mongo:
+    image: mongo:4.4.2
+    volumes:
+      - lagerplass_mongo:/data/db
+volumes:
+  lagerplass_mongo:

@@ -1,0 +1,15 @@
+{% extends "base.jinja2" %}
+{% block content %}
+    <h1 class="display-1" style="text-align: center">
+        Categories
+    </h1>
+    <hr>
+    <div class="categories flex-column">
+        {% for category in categories %}
+            <div class="p-2"  onclick="document.location='/categories/{{ category }}'">
+                <span><b style="display: inline !important;">{{ category.title() }}</b></span>
+            </div>
+            <hr>
+        {% endfor %}
+    </div>
+{% endblock %}

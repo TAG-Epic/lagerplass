@@ -1,0 +1,62 @@
+{% extends "base.jinja2" %}
+{% block custom_code %}
+    <script>
+        function deleteItem(itemId) {
+            fetch(`/items/${itemId}`, {method: "DELETE"});
+            $(`.item-${itemId}`).remove();
+        }
+
+        function createItem() {
+            let url = new URL(window.location.origin + "/items")
+            url.search = new URLSearchParams({
+                name: $(".item-name").val(),
+                category: $(".item-category").val().toLocaleLowerCase()
+            }).toString();
+
+            fetch(url.toString(), {method: "POST"}).then((h) => {
+                location.reload();
+            });
+        }
+    </script>
+{% endblock %}
+{% block custom_styles %}
+    <style>
+        .small-spacers {
+            margin-bottom: 3px;
+        }
+    </style>
+{% endblock %}
+{% block content %}
+    <div class="d-flex flex-column justify-content-middle">
+        <input class="item-name p-2 small-spacers" placeholder="Item name...">
+        <input class="item-category p-2 small-spacers" placeholder="Item category...">
+        <button class="p-2 small-spacers" onclick="createItem()">Add item!</button>
+    </div>
+    <hr>
+    <div class="item-list">
+        <div class="d-flex flex-column">
+            <!-- To anyone who is reading this, my dearest apologies -->
+            {% for item in items %}
+                <div class="item-{{ item["_id"] }}">
+                    <div class="p-2 d-flex">
+                        <div class="d-flex justify-content-start">
+                <span><b class="d-flex justify-content-start"
+                         style="display: inline !important;">{{ item["category"].title() }}/</b>{{ item["name"] }}</span>
+                        </div>
+                        <div class="d-flex justify-content-end" style="margin-left: auto">
+                            <!-- Deletion box yoinked from material icons -->
+                            <svg onclick="deleteItem('{{ item["_id"] }}')" xmlns="http://www.w3.org/2000/svg"
+                                 height="24"
+                                 viewBox="0 0 24 24" width="24">
+                                <path d="M0 0h24v24H0z" fill="none"></path>
+                                <path d="M0 0h24v24H0V0z" fill="none"></path>
+                                <path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zm2.46-7.12l1.41-1.41L12 12.59l2.12-2.12 1.41 1.41L13.41 14l2.12 2.12-1.41 1.41L12 15.41l-2.12 2.12-1.41-1.41L10.59 14l-2.13-2.12zM15.5 4l-1-1h-5l-1 1H5v2h14V4z"></path>
+                            </svg>
+                        </div>
+                    </div>
+                    <hr>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+{% endblock %}

@@ -1,0 +1,94 @@
+{% extends "base.jinja2" %}
+{% block custom_code %}
+    <script>
+        function deleteItem(itemId) {
+            fetch(`/boxes/{{ box_id }}/items/${itemId}`, {method: "DELETE"});
+            $(`.item-${itemId}`).remove();
+        }
+
+        function toggleItemAdd() {
+            $(".item-adding-form").show();
+            $(".item-adding-toggle").hide();
+            $(".item-adding-submit").show();
+        }
+
+        function addItem() {
+            let selected_item = $("option:selected").val();
+            fetch(`/boxes/{{ box_id }}/items/${selected_item}`, {method: "POST"});
+            location.reload();
+        }
+        function deleteBox() {
+            fetch("/boxes/{{ box_id }}", {method: "DELETE"}).then((h) => {
+               history.back();
+            });
+        }
+
+    </script>
+{% endblock %}
+{% block content %}
+    <h1 class="display-1" style="text-align: center">
+        Box {{ box_id[:4] }}
+        <small class="text-muted">At the {{ location }}</small>
+    </h1>
+    <hr>
+
+    <div class="d-flex flex-column">
+        <!-- To anyone who is reading this, my dearest apologies -->
+        {% for item in items %}
+            <div class="item-{{ item["_id"] }}">
+                <div class="p-2 d-flex">
+                    <div class="d-flex justify-content-start">
+                    <span>
+                        <b class="d-flex justify-content-start"
+                           style="display: inline !important;"
+                           onclick="window.location.href = '/categories/{{ item["category"] }}'">
+                                {{ item["category"].title() }}/
+                            </b>
+                        <span onclick="window.location.href = '/items/{{ item["_id"] }}'">{{ item["name"] }}</span>
+                    </span>
+                    </div>
+                    <div class="d-flex justify-content-end" style="margin-left: auto">
+                        <!-- Deletion box yoinked from material icons -->
+                        <svg onclick="deleteItem('{{ item["_id"] }}')" xmlns="http://www.w3.org/2000/svg" height="24"
+                             viewBox="0 0 24 24" width="24">
+                            <path d="M0 0h24v24H0z" fill="none"></path>
+                            <path d="M0 0h24v24H0V0z" fill="none"></path>
+                            <path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zm2.46-7.12l1.41-1.41L12 12.59l2.12-2.12 1.41 1.41L13.41 14l2.12 2.12-1.41 1.41L12 15.41l-2.12 2.12-1.41-1.41L10.59 14l-2.13-2.12zM15.5 4l-1-1h-5l-1 1H5v2h14V4z"></path>
+                        </svg>
+                    </div>
+                </div>
+                <hr>
+            </div>
+        {% endfor %}
+        <div>
+            <div class="d-flex justify-content-center">
+                <svg onclick="toggleItemAdd();" class="item-adding-toggle" style="height: 40px; width: 40px;"
+                     xmlns="http://www.w3.org/2000/svg" enable-background="new 0 0 24 24"
+                     viewBox="0 0 24 24" fill="black"
+                     width="18px" height="18px">
+                    <rect fill="none" height="24" width="24"></rect>
+                    <path d="M22,5.18L10.59,16.6l-4.24-4.24l1.41-1.41l2.83,2.83l10-10L22,5.18z M12,20c-4.41,0-8-3.59-8-8s3.59-8,8-8 c1.57,0,3.04,0.46,4.28,1.25l1.45-1.45C16.1,2.67,14.13,2,12,2C6.48,2,2,6.48,2,12s4.48,10,10,10c1.73,0,3.36-0.44,4.78-1.22 l-1.5-1.5C14.28,19.74,13.17,20,12,20z M19,15h-3v2h3v3h2v-3h3v-2h-3v-3h-2V15z"></path>
+                </svg>
+                <div class="item-adding-form" style="display: none">
+                    <select class="item-selector">
+                        {% for item_category, items in all_items.items() %}
+                            <optgroup label="{{ item_category.title() }}">
+                                {% for item in items %}
+                                    <option value="{{ item["_id"] }}">{{ item["name"] }}</option>
+                                {% endfor %}
+                            </optgroup>
+                        {% endfor %}
+                    </select>
+                </div>
+                <svg class="item-adding-submit" onclick="addItem();" style="display: none; fill: green;"
+                     xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 0 24 24" width="24">
+                    <path d="M0 0h24v24H0z" fill="none"></path>
+                    <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"></path>
+                </svg>
+            </div>
+        </div>
+        <img src="/boxes/{{ box_id }}/qr" alt="QR code" style="width: 200px; height: 200px; margin: auto;">
+        <button style="background-color: red; width: 50%; margin: auto;" onclick="deleteBox()"><b>Delete box</b>
+        </button>
+    </div>
+{% endblock %}

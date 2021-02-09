@@ -1,0 +1,15 @@
+{% extends "base.jinja2" %}
+{% block content %}
+    <h1 class="display-1" style="text-align: center">Can be found in...</h1>
+    <hr>
+    <div class="item-list">
+        <div class="d-flex flex-column">
+            {% for box in boxes %}
+                <div class="d-flex" onclick="location.href = '/boxes/{{ box["_id"] }}'">
+                    <span class="p-2">Box {{ box["_id"] }}</span>
+                </div>
+                <hr>
+            {% endfor %}
+        </div>
+    </div>
+{% endblock %}

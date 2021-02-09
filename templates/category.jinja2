@@ -1,0 +1,15 @@
+{% extends "base.jinja2" %}
+{% block content %}
+    <h1 class="display-1" style="text-align: center">{{ category.title() }}</h1>
+    <hr>
+    <div class="item-list">
+        <div class="d-flex flex-column">
+            {% for item in items %}
+                <div class="d-flex" onclick="location.href = '/items/{{ item["_id"] }}'">
+                    <span class="p-2">{{ item["name"] }}</span>
+                </div>
+                <hr>
+            {% endfor %}
+        </div>
+    </div>
+{% endblock %}
