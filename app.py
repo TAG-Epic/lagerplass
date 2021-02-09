@@ -5,9 +5,10 @@ from qrcode import make as create_qr
 from io import BytesIO
 from PIL.Image import open, Image
 from PIL import ImageDraw, ImageFont
+from os import environ as env
 
 app = Flask(__name__)
-mongo = MongoClient()
+mongo = MongoClient(env.get("MONGO_URI"))
 db = mongo["lagerplass"]
 items_table = db["items"]
 boxes_table = db["boxes"]
