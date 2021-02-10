@@ -13,6 +13,8 @@ db = mongo["lagerplass"]
 items_table = db["items"]
 boxes_table = db["boxes"]
 
+secure = bool(env.get("SECURE"))
+
 
 @app.route('/boxes', methods=["POST"])
 def create_box():
@@ -52,7 +54,7 @@ def remove_item_from_box(box_id, item_id):
 @app.route("/boxes/<string:box_id>/qr")
 def render_qr(box_id):
     qr_img = BytesIO()
-    qr = create_qr("http://%s/boxes/%s" % (request.headers["host"], box_id))
+    qr = create_qr("http%s://%s/boxes/%s" % (("", "s")[secure], request.headers["host"], box_id))
     qr.save(qr_img, format="png")
 
     qr_img.seek(0)
