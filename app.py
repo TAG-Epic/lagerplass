@@ -15,6 +15,10 @@ boxes_table = db["boxes"]
 
 secure = bool(env.get("SECURE"))
 
+def better_redirect(url):
+    if secure:
+        return redirect("https://%s%s" % (request.headers["host"], url))
+
 
 @app.route('/boxes', methods=["POST"])
 def create_box():
@@ -25,7 +29,7 @@ def create_box():
         "items": []
     })
 
-    return redirect("/boxes/%s" % box_id)
+    return better_redirect("/boxes/%s" % box_id)
 
 
 @app.route("/items", methods=["POST"])
