@@ -7,13 +7,12 @@
         }
 
         function createItem() {
-            let url = new URL(window.location.origin + "/items")
-            url.search = new URLSearchParams({
+            let url = "/items?" + new URLSearchParams({
                 name: $(".item-name").val(),
                 category: $(".item-category").val().toLocaleLowerCase()
             }).toString();
 
-            fetch(url.toString(), {method: "POST"}).then((h) => {
+            fetch(url, {method: "POST"}).then((h) => {
                 location.reload();
             });
         }

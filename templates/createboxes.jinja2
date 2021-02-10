@@ -2,8 +2,7 @@
 {% block custom_code %}
     <script>
         function createBox() {
-            let url = new URL(window.location.origin + "/boxes")
-            url.search = new URLSearchParams({
+            let url = "/boxes?" + new URLSearchParams({
                 location: $(".box-location").val().toLocaleLowerCase()
             }).toString();
 
