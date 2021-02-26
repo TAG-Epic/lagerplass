@@ -15,6 +15,7 @@ boxes_table = db["boxes"]
 
 secure = bool(env.get("SECURE"))
 
+
 def better_redirect(url):
     if secure:
         return redirect("https://%s%s" % (request.headers["host"], url))
@@ -30,6 +31,12 @@ def create_box():
     })
 
     return better_redirect("/boxes/%s" % box_id)
+
+
+@app.route("/boxes/<string:box_id>/location", methods=["POST"])
+def edit_box_location(box_id):
+    boxes_table.update_one({"_id": box_id}, {"$set": {"location": request.args["location"]}})
+    return "Ok."
 
 
 @app.route("/items", methods=["POST"])

@@ -15,13 +15,19 @@
         function addItem() {
             let selected_item = $("option:selected").val();
             fetch(`/boxes/{{ box_id }}/items/${selected_item}`, {method: "POST"}).then((h) => {
-               location.reload();
+                location.reload();
             });
         }
+
         function deleteBox() {
             fetch("/boxes/{{ box_id }}", {method: "DELETE"}).then((h) => {
-               history.back();
+                history.back();
             });
+        }
+
+        function updateLocation() {
+            fetch("/boxes/{{ box_id }}/location?" +
+                new URLSearchParams({"location": $(".location-input").val()}).toString(), {method: "POST"}).then((h) => {location.reload()})
         }
 
     </script>
@@ -89,6 +95,11 @@
             </div>
         </div>
         <img src="/boxes/{{ box_id }}/qr" alt="QR code" style="width: 200px; height: 200px; margin: auto;">
+        <div class="location-update-dialog d-flex justify-content-center"
+             style="margin-top: 25px; margin-bottom: 25px;">
+            <input class="location-input" placeholder="Location">
+            <button onclick="updateLocation()">Update location</button>
+        </div>
         <button style="background-color: red; width: 50%; margin: auto;" onclick="deleteBox()"><b>Delete box</b>
         </button>
     </div>
